@@ -102,3 +102,54 @@ export const getMe = async (req, res) => {
     res.status(500).json({ error: 'Server error' })
   }
 }
+
+export const updateProfile = async (req, res) => {
+  const { full_name, email } = req.body
+  if (!full_name || !email)
+    return res.status(400).json({ error: 'Name and email are required' })
+  try {
+    const existing = await pool.query(
+      'SELECT id FROM users WHERE email = $1 AND id != $2',
+      [email, req.userId]
+    )
+    if (existing.rows.length > 0)
+      return res.status(409).json({ error: 'Email already in use' })
+    const result = await pool.query(
+      `UPDATE users SET full_name = $1, email = $2
+       WHERE id = $3
+       RETURNING id, full_name, email, created_at`,
+      [full_name, email, req.userId]
+    )
+    res.json({ user: result.rows[0] })
+  } catch (err) {
+    console.error('updateProfile error:', err.message)
+    res.status(500).json({ error: 'Server error' })
+  }
+}
+
+export const updatePassword = async (req, res) => {
+  const { current_password, new_password } = req.body
+  if (!current_password || !new_password)
+    return res.status(400).json({ error: 'All fields are required' })
+  if (new_password.length < 6)
+    return res.status(400).json({ error: 'Password must be at least 6 characters' })
+  try {
+    const result = await pool.query(
+      'SELECT * FROM users WHERE id = $1',
+      [req.userId]
+    )
+    const user = result.rows[0]
+    const isMatch = await bcrypt.compare(current_password, user.password_hash)
+    if (!isMatch)
+      return res.status(401).json({ error: 'Current password is incorrect' })
+    const password_hash = await bcrypt.hash(new_password, 10)
+    await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2',
+      [password_hash, req.userId]
+    )
+    res.json({ message: 'Password updated successfully' })
+  } catch (err) {
+    console.error('updatePassword error:', err.message)
+    res.status(500).json({ error: 'Server error' })
+  }
+}
