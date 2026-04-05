@@ -1,0 +1,61 @@
+import { FINANCE_ACTIONS } from './financeActions.js'
+
+export const initialState = {
+  transactions: [],
+  savings: [],
+  savingsTotal: 0,
+  categories: [],
+  balance: 0,
+  loading: false,
+  error: null,
+}
+
+const financeReducer = (state, action) => {
+  switch (action.type) {
+    case FINANCE_ACTIONS.SET_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: action.payload.transactions,
+        balance: action.payload.balance,
+        loading: false,
+      }
+    case FINANCE_ACTIONS.ADD_TRANSACTION:
+      return {
+        ...state,
+        transactions: [action.payload.transaction, ...state.transactions],
+        balance: action.payload.balance,
+        savings: action.payload.newSaving
+          ? [action.payload.newSaving, ...state.savings]
+          : state.savings,
+        savingsTotal: action.payload.newSaving
+          ? state.savingsTotal + parseFloat(action.payload.newSaving.amount)
+          : state.savingsTotal,
+      }
+    case FINANCE_ACTIONS.DELETE_TRANSACTION:
+      return {
+        ...state,
+        transactions: state.transactions.filter((t) => t.id !== action.payload.id),
+        balance: action.payload.balance,
+      }
+    case FINANCE_ACTIONS.SET_SAVINGS:
+      return {
+        ...state,
+        savings: action.payload.savings,
+        savingsTotal: action.payload.total,
+      }
+    case FINANCE_ACTIONS.SET_CATEGORIES:
+      return { ...state, categories: action.payload }
+    case FINANCE_ACTIONS.ADD_CATEGORY:
+      return { ...state, categories: [...state.categories, action.payload] }
+    case FINANCE_ACTIONS.SET_BALANCE:
+      return { ...state, balance: action.payload }
+    case FINANCE_ACTIONS.SET_LOADING:
+      return { ...state, loading: action.payload }
+    case FINANCE_ACTIONS.SET_ERROR:
+      return { ...state, error: action.payload, loading: false }
+    default:
+      return state
+  }
+}
+
+export default financeReducer
