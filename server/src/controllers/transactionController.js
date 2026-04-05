@@ -2,16 +2,35 @@ import pool from '../db/pool.js'
 import { seedDefaultCategories } from './categoryController.js'
 
 const calculateBalance = async (userId) => {
-  const result = await pool.query(
-    `SELECT
-      COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) AS total_income,
-      COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) AS total_expenses
+  // Step 1 — find the last income received
+  const lastIncomeResult = await pool.query(
+    `SELECT id, amount, date, created_at
      FROM transactions
-     WHERE user_id = $1`,
+     WHERE user_id = $1 AND type = 'income'
+     ORDER BY date DESC, created_at DESC
+     LIMIT 1`,
     [userId]
   )
-  const { total_income, total_expenses } = result.rows[0]
-  return parseFloat(total_income) - parseFloat(total_expenses)
+
+  // No income yet → balance is 0
+  if (lastIncomeResult.rows.length === 0) return 0
+
+  const lastIncome = lastIncomeResult.rows[0]
+
+  // Step 2 — sum expenses made AFTER the last income (by created_at)
+  const expensesResult = await pool.query(
+    `SELECT COALESCE(SUM(amount), 0) AS total_expenses
+     FROM transactions
+     WHERE user_id = $1
+       AND type = 'expense'
+       AND created_at > $2`,
+    [userId, lastIncome.created_at]
+  )
+
+  const expenses = parseFloat(expensesResult.rows[0].total_expenses)
+
+  // Step 3 — balance = last income - expenses after it
+  return parseFloat(lastIncome.amount) - expenses
 }
 
 export const getTransactions = async (req, res) => {
@@ -60,11 +79,16 @@ export const createTransaction = async (req, res) => {
     if (type === 'income') {
       const currentBalance = await calculateBalance(req.userId)
 
+      // Only auto-save if there is leftover from previous income cycle
       if (currentBalance > 0) {
         await client.query(
           `INSERT INTO savings (user_id, amount, note)
-           VALUES ($1, $2, $3)`,
-          [req.userId, currentBalance, `Auto-saved before new income on ${date || 'today'}`]
+          VALUES ($1, $2, $3)`,
+          [
+            req.userId,
+            currentBalance,
+            `Auto-saved on ${date || new Date().toISOString().split('T')[0]}`
+          ]
         )
         console.log(`💰 Auto-saved ${currentBalance} DT for user ${req.userId}`)
       }
