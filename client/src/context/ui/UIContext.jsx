@@ -1,25 +1,28 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer, useEffect } from 'react'
 
 export const UIContext = createContext(null)
 
+const getInitialTheme = () => {
+  const saved = localStorage.getItem('theme')
+  if (saved) return saved
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
+  return 'light'
+}
+
 const initialState = {
-  theme: localStorage.getItem('theme') || 'light',
+  theme: getInitialTheme(),
   notifications: [],
 }
 
 const uiReducer = (state, action) => {
   switch (action.type) {
-    case 'TOGGLE_THEME':
-      const newTheme = state.theme === 'light' ? 'dark' : 'light'
-      localStorage.setItem('theme', newTheme)
-      return { ...state, theme: newTheme }
+    case 'SET_THEME':
+      localStorage.setItem('theme', action.payload)
+      return { ...state, theme: action.payload }
     case 'ADD_NOTIFICATION':
       return {
         ...state,
-        notifications: [
-          { id: Date.now(), ...action.payload },
-          ...state.notifications,
-        ],
+        notifications: [{ id: Date.now(), ...action.payload }, ...state.notifications],
       }
     case 'REMOVE_NOTIFICATION':
       return {
@@ -34,7 +37,18 @@ const uiReducer = (state, action) => {
 export const UIProvider = ({ children }) => {
   const [state, dispatch] = useReducer(uiReducer, initialState)
 
-  const toggleTheme = () => dispatch({ type: 'TOGGLE_THEME' })
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    if (state.theme === 'system') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      root.classList.add(isDark ? 'dark' : 'light')
+    } else {
+      root.classList.add(state.theme)
+    }
+  }, [state.theme])
+
+  const setTheme = (theme) => dispatch({ type: 'SET_THEME', payload: theme })
 
   const notify = (message, type = 'info') => {
     const id = Date.now()
@@ -43,7 +57,7 @@ export const UIProvider = ({ children }) => {
   }
 
   return (
-    <UIContext.Provider value={{ ...state, toggleTheme, notify }}>
+    <UIContext.Provider value={{ ...state, setTheme, notify }}>
       {children}
     </UIContext.Provider>
   )
