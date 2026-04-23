@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import pool from '../db/pool.js'
+import { seedDefaultCategories } from './categoryController.js'
 
 export const register = async (req, res) => {
   const { full_name, email, password } = req.body
@@ -28,6 +29,8 @@ export const register = async (req, res) => {
     )
 
     const user = result.rows[0]
+
+    await seedDefaultCategories(user.id)
 
     const token = jwt.sign(
       { userId: user.id, email: user.email },

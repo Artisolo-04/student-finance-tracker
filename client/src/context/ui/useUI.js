@@ -1,10 +1,10 @@
-import { useContext } from 'react'
-import { UIContext } from './UIContext.jsx'
+import { useContext } from "react";
+import { UIContext } from "./UIContext.jsx";
 
 const useUI = () => {
-  const context = useContext(UIContext)
-  if (!context) throw new Error('useUI must be used within UIProvider')
-  return context
-}
+  const context = useContext(UIContext);
+  if (!context) throw new Error("useUI must be used within UIProvider");
+  return context;
+};
 
-export default useUI
+export default useUI;

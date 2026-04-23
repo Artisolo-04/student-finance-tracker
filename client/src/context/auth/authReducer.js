@@ -30,6 +30,9 @@ const authReducer = (state, action) => {
       }
     case AUTH_ACTIONS.SET_LOADING:
       return { ...state, loading: action.payload }
+    case AUTH_ACTIONS.UPDATE_USER:
+      localStorage.setItem('user', JSON.stringify(action.payload))
+      return { ...state, user: action.payload }
     default:
       return state
   }

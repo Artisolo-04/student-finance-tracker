@@ -5,6 +5,8 @@ export const initialState = {
   savings: [],
   savingsTotal: 0,
   categories: [],
+  incomeCategories: [],
+  expenseCategories: [],
   balance: 0,
   loading: false,
   error: null,
@@ -44,9 +46,23 @@ const financeReducer = (state, action) => {
         savingsTotal: action.payload.total,
       }
     case FINANCE_ACTIONS.SET_CATEGORIES:
-      return { ...state, categories: action.payload }
+      return {
+        ...state,
+        categories: action.payload.all || state.categories,
+        incomeCategories: action.payload.income || state.incomeCategories,
+        expenseCategories: action.payload.expense || state.expenseCategories,
+      }
     case FINANCE_ACTIONS.ADD_CATEGORY:
-      return { ...state, categories: [...state.categories, action.payload] }
+      return {
+        ...state,
+        categories: [...state.categories, action.payload],
+        incomeCategories: action.payload.category_type === 'income'
+          ? [...state.incomeCategories, action.payload]
+          : state.incomeCategories,
+        expenseCategories: action.payload.category_type === 'expense'
+          ? [...state.expenseCategories, action.payload]
+          : state.expenseCategories,
+      }
     case FINANCE_ACTIONS.SET_BALANCE:
       return { ...state, balance: action.payload }
     case FINANCE_ACTIONS.SET_LOADING:

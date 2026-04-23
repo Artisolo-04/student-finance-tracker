@@ -2,6 +2,7 @@ export const AUTH_ACTIONS = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
   SET_LOADING: 'SET_LOADING',
+  UPDATE_USER: 'UPDATE_USER',
 }
 
 export const login = (user, token) => ({
@@ -16,4 +17,9 @@ export const logout = () => ({
 export const setLoading = (loading) => ({
   type: AUTH_ACTIONS.SET_LOADING,
   payload: loading,
+})
+
+export const updateUser = (user) => ({
+  type: AUTH_ACTIONS.UPDATE_USER,
+  payload: user,
 })
