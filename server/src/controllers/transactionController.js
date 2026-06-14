@@ -2,7 +2,6 @@ import pool from '../db/pool.js'
 import { seedDefaultCategories } from './categoryController.js'
 
 const calculateBalance = async (userId) => {
-  // Step 1 — find the last income received
   const lastIncomeResult = await pool.query(
     `SELECT id, amount, date, created_at
      FROM transactions
@@ -12,12 +11,10 @@ const calculateBalance = async (userId) => {
     [userId]
   )
 
-  // No income yet → balance is 0
   if (lastIncomeResult.rows.length === 0) return 0
 
   const lastIncome = lastIncomeResult.rows[0]
 
-  // Step 2 — sum expenses made AFTER the last income (by created_at)
   const expensesResult = await pool.query(
     `SELECT COALESCE(SUM(amount), 0) AS total_expenses
      FROM transactions
@@ -29,7 +26,6 @@ const calculateBalance = async (userId) => {
 
   const expenses = parseFloat(expensesResult.rows[0].total_expenses)
 
-  // Step 3 — balance = last income - expenses after it
   return parseFloat(lastIncome.amount) - expenses
 }
 
@@ -73,13 +69,9 @@ export const createTransaction = async (req, res) => {
   try {
     await client.query('BEGIN')
 
-    // ── Auto-savings logic ──────────────────────────────────────────
-    // When new income arrives and current balance > 0,
-    // move the remaining balance to savings first
     if (type === 'income') {
       const currentBalance = await calculateBalance(req.userId)
 
-      // Only auto-save if there is leftover from previous income cycle
       if (currentBalance > 0) {
         await client.query(
           `INSERT INTO savings (user_id, amount, note)
@@ -93,7 +85,6 @@ export const createTransaction = async (req, res) => {
         console.log(`💰 Auto-saved ${currentBalance} DT for user ${req.userId}`)
       }
     }
-    // ───────────────────────────────────────────────────────────────
 
     const result = await client.query(
       `INSERT INTO transactions (user_id, type, amount, category_id, note, date)
@@ -106,7 +97,6 @@ export const createTransaction = async (req, res) => {
 
     await client.query('COMMIT')
 
-    // Seed default categories on first transaction if not yet done
     const catCount = await pool.query(
       'SELECT COUNT(*) FROM categories WHERE user_id = $1',
       [req.userId]

@@ -49,13 +49,11 @@ const Analytics = () => {
   return (
     <div className="w-full sm:h-full flex flex-col gap-4">
 
-      {/* Header */}
       <div className="shrink-0 animate-fadeUp">
         <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight">Analytics</h1>
         <p className="text-xs text-zinc-500 mt-0.5">Overview of your financial activity</p>
       </div>
 
-      {/* Tabs */}
       <div className="shrink-0 flex items-center gap-1
         bg-white dark:bg-[#0f0f1c]
         border border-black/[0.07] dark:border-white/[0.07]
@@ -76,7 +74,6 @@ const Analytics = () => {
         ))}
       </div>
 
-      {/* Tab content */}
       <div className="sm:flex-1 sm:min-h-0 sm:overflow-y-auto animate-fadeUp stagger-2">
 
         {activeTab === 'Overview' && (

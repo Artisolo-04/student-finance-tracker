@@ -6,7 +6,7 @@
 # ============================================================
 
 BASE_URL="http://localhost:5000"
-EMAIL="khelifihachemm@gmail.com"
+EMAIL="Test@gmail.com"
 PASSWORD="123456789"
 TOKEN=""
 

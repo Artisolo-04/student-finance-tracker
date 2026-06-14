@@ -21,12 +21,10 @@ const Login = () => {
   return (
     <div className="min-h-screen flex dark:bg-gray-950 bg-gray-50">
 
-      {/* Left panel */}
       <div className="hidden lg:flex flex-col justify-between w-[52%] bg-[#0a0a14] p-12 relative overflow-hidden">
         <div className="absolute top-[-80px] left-[-80px] w-[420px] h-[420px] bg-purple-700 opacity-[0.15] rounded-full blur-[130px] pointer-events-none" />
         <div className="absolute bottom-[-60px] right-[-40px] w-[280px] h-[280px] bg-violet-500 opacity-[0.08] rounded-full blur-[100px] pointer-events-none" />
 
-        {/* Logo */}
         <div className="flex items-center gap-2.5 z-10">
           <div className="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
             <TrendingUp size={18} className="text-white" />
@@ -34,16 +32,15 @@ const Login = () => {
           <span className="text-white font-semibold text-lg tracking-tight">FinTrack</span>
         </div>
 
-        {/* Hero */}
         <div className="flex flex-col items-center justify-center flex-1 z-10 gap-10">
-          {/* Icon circle */}
+
           <div className="relative">
             <div className="w-40 h-40 rounded-full bg-purple-900/20 border border-purple-700/30 flex items-center justify-center">
               <div className="w-24 h-24 rounded-full bg-purple-800/30 border border-purple-600/40 flex items-center justify-center">
                 <PiggyBank size={44} className="text-purple-300" strokeWidth={1.5} />
               </div>
             </div>
-            {/* orbiting icons */}
+
             <div className="absolute -top-1 -right-1 w-11 h-11 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
               <BarChart3 size={18} className="text-amber-400" />
             </div>
@@ -59,7 +56,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Feature pills */}
           <div className="flex flex-col gap-3 w-full max-w-xs">
             {[
               { icon: PiggyBank, label: 'Auto-saves when income arrives', color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
@@ -77,11 +73,9 @@ const Login = () => {
         <p className="text-xs text-gray-700 z-10">Built for students · Free forever</p>
       </div>
 
-      {/* Right panel — form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm animate-fadeUp">
 
-          {/* Mobile logo */}
           <div className="flex items-center gap-2.5 mb-10 lg:hidden">
             <div className="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center">
               <TrendingUp size={18} className="text-white" />

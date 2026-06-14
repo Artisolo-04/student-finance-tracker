@@ -35,13 +35,8 @@ const Dashboard = () => {
   if (loading) return <DashboardSkeleton />
 
   return (
-    /*
-     * Desktop: fixed height column, nothing overflows the shell.
-     * Mobile: natural flow, AppShell handles the scroll.
-     */
     <div className="w-full h-full flex flex-col gap-6">
 
-      {/* Low balance alert */}
       {low && (
         <div className="flex items-center gap-2.5 rounded-xl
           border border-amber-500/20 bg-amber-500/[0.07]
@@ -53,7 +48,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Stat cards row */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 shrink-0">
         <StatCard
           label="Balance"
@@ -85,7 +79,6 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* Main content — flex-1 so it fills remaining height on desktop */}
       <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 min-h-0">
           <RecentTransactions transactions={recent} />
@@ -103,7 +96,6 @@ const Dashboard = () => {
   )
 }
 
-/* ── Skeleton ──────────────────────────────────────────────────────── */
 const DashboardSkeleton = () => (
   <div className="w-full h-full flex flex-col gap-4 animate-pulse">
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 shrink-0">

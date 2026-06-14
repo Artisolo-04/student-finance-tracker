@@ -42,7 +42,6 @@ const StatCard = ({ label, value, sub, color = 'purple', className = '' }) => {
       hover:scale-[1.01] transition-transform duration-200
       animate-fadeUp ${className}
     `}>
-      {/* Dot indicator */}
       <span className={`absolute top-4 right-4 w-1.5 h-1.5 rounded-full ${c.dot}`} />
 
       <p className="text-[11px] font-medium uppercase tracking-wider

@@ -31,7 +31,6 @@ const CategoryOverview = ({ categoryData, totalExpenses }) => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-center justify-between">
 
-          {/* Pie */}
           <div className="flex flex-col items-center">
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -61,7 +60,6 @@ const CategoryOverview = ({ categoryData, totalExpenses }) => {
             </p>
           </div>
 
-          {/* Breakdown bars */}
           <div className="space-y-3">
             {categoryData.map((cat, i) => {
               const pct = totalExpenses > 0 ? Math.round((cat.value / totalExpenses) * 100) : 0

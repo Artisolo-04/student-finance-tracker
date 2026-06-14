@@ -43,7 +43,6 @@ const CategoryPieChart = ({ categoryData }) => (
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Legend */}
         <div className="mt-4 space-y-2">
           {categoryData.slice(0, 5).map((item, i) => (
             <div key={item.name} className="flex items-center justify-between">

@@ -37,7 +37,6 @@ const Insights = ({
   const insights = useMemo(() => {
     const list = []
 
-    // 1. Top spending category
     if (categoryData.length > 0) {
       const top = categoryData[0]
       const pct = totalExpenses > 0 ? Math.round((top.value / totalExpenses) * 100) : 0
@@ -52,7 +51,6 @@ const Insights = ({
       })
     }
 
-    // 2. Savings health
     if (savingsRate >= 20) {
       list.push({
         icon: Target,
@@ -75,7 +73,6 @@ const Insights = ({
       })
     }
 
-    // 3. Expense vs income ratio
     const ratio = totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0
     if (ratio > 90) {
       list.push({
@@ -99,7 +96,6 @@ const Insights = ({
       })
     }
 
-    // 4. Monthly trend
     if (monthlyData.length >= 2) {
       const last  = monthlyData[monthlyData.length - 1]
       const prev  = monthlyData[monthlyData.length - 2]
@@ -128,7 +124,6 @@ const Insights = ({
       }
     }
 
-    // 5. Most active month
     if (monthlyData.length > 0) {
       const busiest = monthlyData.reduce((max, m) =>
         (m.income + m.expenses) > ((max?.income ?? 0) + (max?.expenses ?? 0)) ? m : max
@@ -146,7 +141,6 @@ const Insights = ({
       }
     }
 
-    // 6. Biggest single expense
     const biggestExpense = transactions
       .filter(t => t.type === 'expense')
       .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))[0]

@@ -62,18 +62,12 @@ const Transactions = () => {
 
   return (
     <>
-      {/* Modal — rendered outside the layout flow */}
       {showForm && (
         <TransactionForm onClose={() => { setShowForm(false); fetchTransactions() }} />
       )}
 
-      {/*
-        Desktop: h-full flex-col — nothing overflows the shell
-        Mobile: natural flow, AppShell main scrolls
-      */}
       <div className="w-full sm:h-full flex flex-col gap-5">
 
-        {/* Header */}
         <div className="flex items-center justify-between shrink-0 animate-fadeUp">
           <div>
             <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight">
@@ -95,7 +89,6 @@ const Transactions = () => {
           </button>
         </div>
 
-        {/* Filters */}
         <div className="shrink-0 animate-fadeUp stagger-1 relative z-20">
           <TransactionFilters
             filter={filter}         onChange={setFilter}
@@ -106,10 +99,6 @@ const Transactions = () => {
           />
         </div>
 
-        {/*
-          Desktop: flex-1 min-h-0 so the list fills remaining height and scrolls internally
-          Mobile: min-h-[60vh] so it has enough natural height before AppShell scroll kicks in
-        */}
         <div className="
           relative z-10
           bg-white dark:bg-[#0f0f1c]

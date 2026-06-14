@@ -15,13 +15,11 @@ const Settings = () => {
   return (
     <div className="w-full sm:h-full flex flex-col gap-5">
 
-      {/* Header */}
       <div className="shrink-0 animate-fadeUp">
         <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight">Settings</h1>
         <p className="text-xs text-zinc-500 mt-0.5">Manage your account and preferences</p>
       </div>
 
-      {/* Tabs */}
       <div className="shrink-0 flex items-center gap-1
         bg-white dark:bg-[#0f0f1c]
         border border-black/[0.07] dark:border-white/[0.07]
@@ -42,7 +40,6 @@ const Settings = () => {
         ))}
       </div>
 
-      {/* Tab content */}
       <div className="sm:flex-1 sm:min-h-0 sm:overflow-y-auto animate-fadeUp stagger-2 bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col w-full items-center justify-center max-sm:border-none max-sm:p-0">
         <div className="max-w-2xl mx-auto flex flex-col gap-6 pb-6 w-4/5 max-sm:w-full">
 

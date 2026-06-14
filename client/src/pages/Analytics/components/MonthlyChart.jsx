@@ -53,7 +53,6 @@ const MonthlyChart = ({ monthlyData, totalIncome, totalExpenses }) => {
   return (
     <div className="sm:h-full flex flex-col gap-4">
 
-      {/* Summary mini cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 shrink-0">
         {[
           {
@@ -96,14 +95,13 @@ const MonthlyChart = ({ monthlyData, totalIncome, totalExpenses }) => {
         ))}
       </div>
 
-      {/* Bar chart */}
       <div className="sm:flex-1 sm:min-h-0 min-h-[320px] bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col">
         <div className="flex items-start justify-between mb-5 shrink-0">
           <div>
             <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Income vs Expenses</h2>
             <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-0.5">Monthly breakdown</p>
           </div>
-          {/* Trend badge */}
+
           {monthlyData.length >= 2 && (
             <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium
               ${trend <= 0

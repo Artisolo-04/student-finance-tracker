@@ -6,7 +6,7 @@ const router = Router()
 
 router.use(authMiddleware)
 
-router.get('/balance', getBalance)   // ← must be BEFORE /:id
+router.get('/balance', getBalance)
 router.get('/', getTransactions)
 router.post('/', createTransaction)
 router.delete('/:id', deleteTransaction)

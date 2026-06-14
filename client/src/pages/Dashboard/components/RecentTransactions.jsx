@@ -11,7 +11,6 @@ const TransactionRow = ({ t, index }) => (
     `}
     style={{ animationDelay: `${index * 0.05}s` }}
   >
-    {/* Icon + info */}
     <div className="flex items-center gap-3 min-w-0">
       <div className={`
         w-8 h-8 rounded-xl flex items-center justify-center border shrink-0
@@ -50,7 +49,6 @@ const TransactionRow = ({ t, index }) => (
       </div>
     </div>
 
-    {/* Amount */}
     <span className={`
       text-sm font-bold tabular-nums shrink-0 ml-3
       ${t.type === 'income'
@@ -69,7 +67,6 @@ const RecentTransactions = ({ transactions }) => (
     bg-white dark:bg-[#0f0f1c]
     border border-black/[0.07] dark:border-white/[0.07]
   ">
-    {/* Header */}
     <div className="flex items-center justify-between mb-3 shrink-0">
       <div>
         <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
@@ -90,7 +87,6 @@ const RecentTransactions = ({ transactions }) => (
       </Link>
     </div>
 
-    {/* List */}
     {transactions.length === 0 ? (
       <div className="flex-1 flex flex-col items-center justify-center gap-2 py-8">
         <div className="w-11 h-11 rounded-2xl

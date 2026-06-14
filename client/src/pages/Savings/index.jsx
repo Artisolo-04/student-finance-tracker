@@ -12,7 +12,6 @@ const Savings = () => {
   return (
     <div className="w-full sm:h-full flex flex-col gap-5">
 
-      {/* Header */}
       <div className="shrink-0 animate-fadeUp">
         <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight">
           Piggy Bank
@@ -22,16 +21,11 @@ const Savings = () => {
         </p>
       </div>
 
-      {/* Summary + Stats — fixed height row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 shrink-0 animate-fadeUp stagger-1">
         <SavingsSummary savingsTotal={savingsTotal} count={savings.length} />
         <SavingsStats savings={savings} savingsTotal={savingsTotal} avgSaving={avgSaving} />
       </div>
 
-      {/*
-        Desktop: flex-1 min-h-0 — fills remaining height, scrolls internally
-        Mobile:  min-h-[50vh] — natural height, AppShell scrolls
-      */}
       <div className="
         sm:flex-1 sm:min-h-0
         min-h-[50vh]

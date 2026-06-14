@@ -30,7 +30,6 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
       border border-black/[0.07] dark:border-white/[0.07]
       animate-fadeUp
     ">
-      {/* Header */}
       <div className="mb-3 shrink-0">
         <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Savings overview
@@ -40,7 +39,6 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
         </p>
       </div>
 
-      {/* Ring chart */}
       <div className="flex-1 flex flex-col items-center justify-center gap-2 py-2">
         <div className="relative w-32 h-32">
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -53,12 +51,12 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
                 </feMerge>
               </filter>
             </defs>
-            {/* Track */}
+
             <circle cx="50" cy="50" r={radius} fill="none"
               className="stroke-zinc-100 dark:stroke-zinc-800/80"
               strokeWidth="7"
             />
-            {/* Progress */}
+
             <circle cx="50" cy="50" r={radius} fill="none"
               stroke="#8b5cf6"
               strokeWidth="7"
@@ -70,7 +68,6 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
             />
           </svg>
 
-          {/* Center content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
             <PiggyBank size={18} className="text-purple-500 dark:text-purple-400" strokeWidth={1.5} />
             <span className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 leading-none tabular-nums">
@@ -80,14 +77,12 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
           </div>
         </div>
 
-        {/* Total savings amount */}
         <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
           {formatCurrency(savingsTotal)}
         </p>
         <p className="text-xs text-zinc-400 dark:text-zinc-600">Total accumulated</p>
       </div>
 
-      {/* Stats breakdown */}
       <div className="
         border-t border-black/[0.05] dark:border-white/[0.05]
         pt-3 mt-auto space-y-2 shrink-0

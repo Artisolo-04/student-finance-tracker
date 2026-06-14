@@ -69,7 +69,6 @@ const TransactionForm = ({ onClose }) => {
       onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="bg-[#0f0f1c] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-md animate-scaleIn">
 
-        {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.06]">
           <div className="flex gap-1 bg-white/[0.04] rounded-xl p-1">
             {['transaction', 'category'].map(t => (
@@ -90,7 +89,6 @@ const TransactionForm = ({ onClose }) => {
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-5 py-5">
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400
@@ -101,7 +99,6 @@ const TransactionForm = ({ onClose }) => {
 
           {tab === 'transaction' ? (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Type toggle */}
               <div className="flex gap-2">
                 {['expense', 'income'].map(t => (
                   <button key={t} type="button" onClick={() => handleTypeChange(t)}
@@ -122,7 +119,6 @@ const TransactionForm = ({ onClose }) => {
                 ))}
               </div>
 
-              {/* Amount */}
               <div>
                 <label className="text-xs text-zinc-500 mb-1.5 block font-medium tracking-wide">
                   Amount (DT)
@@ -137,7 +133,6 @@ const TransactionForm = ({ onClose }) => {
                 />
               </div>
 
-              {/* Note */}
               <div>
                 <label className="text-xs text-zinc-500 mb-1.5 block font-medium tracking-wide">
                   Note
@@ -153,7 +148,6 @@ const TransactionForm = ({ onClose }) => {
                 />
               </div>
 
-              {/* Date */}
               <div>
                 <label className="text-xs text-zinc-500 mb-1.5 block font-medium tracking-wide">
                   Date
@@ -168,7 +162,6 @@ const TransactionForm = ({ onClose }) => {
                 />
               </div>
 
-              {/* Category */}
               <div>
                 <label className="text-xs text-zinc-500 mb-1.5 block font-medium tracking-wide">
                   {form.type === 'income' ? 'Source' : 'Category'}
