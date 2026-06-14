@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useAuth from '../../../context/auth/useAuth.js'
 import api from '../../../api/index.js'
-import { Section, Message } from './shared.jsx'
+import { Section, Message } from './Shared.jsx'
 
 const ProfileForm = () => {
   const { user, updateUserData } = useAuth()

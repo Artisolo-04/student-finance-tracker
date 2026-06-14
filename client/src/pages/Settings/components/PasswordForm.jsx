@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import api from '../../../api/index.js'
-import { Section, Message } from './shared.jsx'
+import { Section, Message } from './Shared.jsx'
 
 const PasswordForm = () => {
   const [form, setForm]       = useState({ current_password: '', new_password: '', confirm_password: '' })

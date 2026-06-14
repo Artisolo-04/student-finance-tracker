@@ -1,10 +1,11 @@
 import useUI from '../../../context/ui/useUI.js'
-import { Section } from './shared.jsx'
+import { Section } from './Shared.jsx'
+import { Sun, Moon, Monitor } from 'lucide-react'
 
 const THEMES = [
-  { value: 'light',  label: 'Light',  icon: '☀️' },
-  { value: 'dark',   label: 'Dark',   icon: '🌙' },
-  { value: 'system', label: 'System', icon: '💻' },
+  { value: 'light',  label: 'Light',  icon: <Sun /> },
+  { value: 'dark',   label: 'Dark',   icon: <Moon /> },
+  { value: 'system', label: 'System', icon: <Monitor /> },
 ]
 
 const ThemeButton = ({ value, label, icon, current, onClick }) => (

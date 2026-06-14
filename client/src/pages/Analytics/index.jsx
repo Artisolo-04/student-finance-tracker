@@ -1,15 +1,16 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useFinance from '../../context/finance/useFinance.js'
-import { formatCurrency, groupByCategory, groupByMonth } from '../../context/finance/financeHelpers.js'
+import { groupByCategory, groupByMonth } from '../../context/finance/financeHelpers.js'
 import AnalyticsStats from './components/AnalyticsStats.jsx'
 import MonthlyChart from './components/MonthlyChart.jsx'
-import CategoryPieChart from './components/CategoryPieChart.jsx'
-import CategoryBreakdown from './components/CategoryBreakdown.jsx'
+import CategoryOverview from './components/CategoryOverview.jsx'
+import Insights from './components/Insights.jsx'
 
-const COLORS = ['#7F77DD','#1D9E75','#EF9F27','#E24B4A','#D4537E','#378ADD','#888780','#5DCAA5']
+const TABS = ['Overview', 'Monthly', 'Insights']
 
 const Analytics = () => {
   const { transactions, savingsTotal, fetchTransactions, fetchSavings } = useFinance()
+  const [activeTab, setActiveTab] = useState('Overview')
 
   useEffect(() => { fetchTransactions(); fetchSavings() }, [])
 
@@ -38,35 +39,88 @@ const Analytics = () => {
   const savingsRate = totalIncome > 0 ? Math.round((savingsTotal / totalIncome) * 100) : 0
 
   if (transactions.length === 0) return (
-    <div className="max-w-4xl mx-auto flex flex-col items-center justify-center py-24 text-center">
-      <span className="text-4xl mb-3">📊</span>
-      <p className="text-sm text-gray-500 dark:text-gray-400">No data to analyze yet</p>
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Add some transactions to see your analytics</p>
+    <div className="w-full sm:h-full flex flex-col items-center justify-center text-center gap-2">
+      <span className="text-4xl">📊</span>
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">No data to analyze yet</p>
+      <p className="text-xs text-zinc-400 dark:text-zinc-500">Add some transactions to see your analytics</p>
     </div>
   )
 
   return (
-    <div className="w-full h-auto mx-auto space-y-6">
+    <div className="w-full sm:h-full flex flex-col gap-4">
 
-      <div>
-        <h1 className="text-lg font-medium text-gray-900 dark:text-gray-100">Analytics</h1>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Overview of your financial activity</p>
+      {/* Header */}
+      <div className="shrink-0 animate-fadeUp">
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight">Analytics</h1>
+        <p className="text-xs text-zinc-500 mt-0.5">Overview of your financial activity</p>
       </div>
 
-      <AnalyticsStats
-        totalIncome={totalIncome}
-        totalExpenses={totalExpenses}
-        savingsTotal={savingsTotal}
-        savingsRate={savingsRate}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CategoryPieChart categoryData={categoryData} />
-        <CategoryBreakdown categoryData={categoryData} totalExpenses={totalExpenses} />
+      {/* Tabs */}
+      <div className="shrink-0 flex items-center gap-1
+        bg-white dark:bg-[#0f0f1c]
+        border border-black/[0.07] dark:border-white/[0.07]
+        rounded-xl p-1 w-fit animate-fadeUp stagger-1"
+      >
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200
+              ${activeTab === tab
+                ? 'bg-purple-600 text-white shadow-sm shadow-purple-500/30'
+                : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
+              }`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
-      <MonthlyChart monthlyData={monthlyData} />
+      {/* Tab content */}
+      <div className="sm:flex-1 sm:min-h-0 sm:overflow-y-auto animate-fadeUp stagger-2">
 
+        {activeTab === 'Overview' && (
+          <div className="sm:h-full flex flex-col gap-4">
+            <div className="shrink-0">
+              <AnalyticsStats
+                totalIncome={totalIncome}
+                totalExpenses={totalExpenses}
+                savingsTotal={savingsTotal}
+                savingsRate={savingsRate}
+              />
+            </div>
+            <div className="sm:flex-1 sm:min-h-0">
+              <CategoryOverview
+                categoryData={categoryData}
+                totalExpenses={totalExpenses}
+              />
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'Monthly' && (
+          <div className="sm:h-full sm:overflow-y-auto">
+            <MonthlyChart
+              monthlyData={monthlyData}
+              totalIncome={totalIncome}
+              totalExpenses={totalExpenses}
+            />
+          </div>
+        )}
+
+        {activeTab === 'Insights' && (
+          <Insights
+            transactions={transactions}
+            categoryData={categoryData}
+            monthlyData={monthlyData}
+            totalIncome={totalIncome}
+            totalExpenses={totalExpenses}
+            savingsTotal={savingsTotal}
+            savingsRate={savingsRate}
+          />
+        )}
+
+      </div>
     </div>
   )
 }

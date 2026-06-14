@@ -1,66 +1,157 @@
-import { useLocation } from 'react-router-dom'
-import useFinance from '../../context/finance/useFinance.js'
-import useUI from '../../context/ui/useUI.js'
-import { isBalanceLow, formatCurrency } from '../../context/finance/financeHelpers.js'
-import ThemeSwitcher from '../common/ThemeSwitcher.jsx'
-import { RiMenuFoldLine, RiMenuUnfoldLine } from 'react-icons/ri'
+import { useLocation } from "react-router-dom";
+import useFinance from "../../context/finance/useFinance.js";
+import useUI from "../../context/ui/useUI.js";
+import useAuth from "../../context/auth/useAuth.js";
+import { isBalanceLow, formatCurrency } from "../../context/finance/financeHelpers.js";
+import ThemeSwitcher from "../common/ThemeSwitcher.jsx";
+import { PanelLeftClose, PanelLeftOpen, AlertTriangle, Wallet } from "lucide-react";
 
 const pageTitles = {
-  '/': 'Dashboard',
-  '/transactions': 'Transactions',
-  '/savings': 'Savings',
-  '/analytics': 'Analytics',
-  '/settings': 'Settings',
-}
+  "/":             "Dashboard",
+  "/transactions": "Transactions",
+  "/savings":      "Savings",
+  "/analytics":    "Analytics",
+  "/settings":     "Settings",
+};
 
-const Navbar = () => {
-  const { pathname } = useLocation()
-  const { balance } = useFinance()
-  const { theme, setTheme, sidebarExpanded, toggleSidebar } = useUI()
-  const low = isBalanceLow(balance)
+/**
+ * Navbar
+ * @prop {boolean} mobile — when true, renders the mobile top bar variant
+ *   (no sidebar toggle, no greeting, compact balance)
+ */
+const Navbar = ({ mobile = false }) => {
+  const { pathname } = useLocation();
+  const { balance } = useFinance();
+  const { user } = useAuth();
+  const { theme, setTheme, sidebarExpanded, toggleSidebar } = useUI();
+  const low = isBalanceLow(balance);
 
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const firstName = user?.full_name?.split(" ")[0] || "";
+  const title = pageTitles[pathname] || "FinTrack";
+  const isDashboard = pathname === "/";
+
+  /* ── Mobile top bar ──────────────────────────────────────────────── */
+  if (mobile) {
+    return (
+      <header
+        className="
+          h-14 shrink-0 w-full flex items-center px-4 gap-3
+          dark:bg-[#0c0c16] bg-white
+          border-b dark:border-white/[0.06] border-black/[0.07]
+        "
+      >
+        {/* Page title */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold dark:text-zinc-100 text-zinc-800 leading-none">
+            {title}
+          </p>
+          {isDashboard && firstName && (
+            <p className="text-[11px] dark:text-zinc-500 text-zinc-400 mt-0.5">
+              {greeting}, {firstName}
+            </p>
+          )}
+        </div>
+
+        {/* Balance pill */}
+        <BalancePill balance={balance} low={low} />
+
+        <ThemeSwitcher theme={theme} setTheme={setTheme} />
+      </header>
+    );
+  }
+
+  /* ── Desktop Navbar ──────────────────────────────────────────────── */
   return (
-    <div className="h-14 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center px-4 gap-3">
-
-      {/* Toggle button */}
+    <header
+      className="
+        h-14 w-full shrink-0 flex items-center px-4 gap-3
+        dark:bg-[#0c0c16] bg-white
+        border-b dark:border-white/[0.06] border-black/[0.07]
+      "
+    >
+      {/* Sidebar toggle */}
       <button
         onClick={toggleSidebar}
-        className="w-8 h-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors hidden md:flex"
+        aria-label="Toggle sidebar"
+        className="
+          w-8 h-8 flex items-center justify-center rounded-lg
+          dark:text-zinc-500 text-zinc-400
+          dark:hover:bg-white/[0.05] hover:bg-black/[0.05]
+          dark:hover:text-zinc-300 hover:text-zinc-600
+          transition-all duration-150
+        "
       >
         {sidebarExpanded
-          ? <RiMenuFoldLine size={18} />
-          : <RiMenuUnfoldLine size={18} />
+          ? <PanelLeftClose size={17} strokeWidth={1.5} />
+          : <PanelLeftOpen  size={17} strokeWidth={1.5} />
         }
       </button>
 
-      {/* Page title */}
-      <span className="flex-1 text-sm font-medium text-gray-900 dark:text-gray-100">
-        {pageTitles[pathname] || 'FinTrack'}
-      </span>
+      {/* Page title + greeting */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold dark:text-zinc-100 text-zinc-800 leading-none">
+          {title}
+        </p>
+        {isDashboard && firstName && (
+          <p className="text-[11px] dark:text-zinc-500 text-zinc-400 mt-0.5 animate-fadeIn">
+            {greeting}, {firstName}
+          </p>
+        )}
+      </div>
 
-      {/* Balance low warning */}
+      {/* Low balance warning — desktop only */}
       {low && (
-        <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs px-3 py-1.5 rounded-full animate-pulse">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="currentColor"/>
-            <line x1="12" y1="9" x2="12" y2="13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            <line x1="12" y1="17" x2="12.01" y2="17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-          Balance low: {formatCurrency(balance)}
+        <div
+          className="
+            hidden sm:flex items-center gap-1.5 shrink-0
+            bg-amber-500/[0.08] border border-amber-500/20
+            text-amber-600 dark:text-amber-400
+            text-xs font-medium px-3 py-1.5 rounded-full
+            animate-fadeIn
+          "
+        >
+          <AlertTriangle size={11} strokeWidth={2.5} />
+          <span>Balance low — {formatCurrency(balance)}</span>
         </div>
       )}
 
       {/* Balance pill */}
-      <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 px-3 py-1.5 rounded-full">
-        <span className="text-xs text-gray-400 dark:text-gray-500">Balance</span>
-        <span className={`text-xs font-medium ${low ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-gray-100'}`}>
-          {formatCurrency(balance)}
-        </span>
-      </div>
+      <BalancePill balance={balance} low={low} />
 
       <ThemeSwitcher theme={theme} setTheme={setTheme} />
-    </div>
-  )
-}
+    </header>
+  );
+};
 
-export default Navbar
+/* ── Balance pill — shared between mobile and desktop ────────────────── */
+const BalancePill = ({ balance, low }) => (
+  <div
+    className={`
+      flex items-center gap-2 px-3 py-1.5 rounded-full shrink-0
+      border transition-colors duration-300
+      ${
+        low
+          ? "bg-amber-500/[0.08] border-amber-500/20"
+          : "dark:bg-white/[0.04] bg-black/[0.04] dark:border-white/[0.08] border-black/[0.08]"
+      }
+    `}
+  >
+    <Wallet
+      size={12}
+      strokeWidth={1.5}
+      className={low ? "text-amber-500 dark:text-amber-400" : "dark:text-zinc-500 text-zinc-400"}
+    />
+    <span
+      className={`text-xs font-semibold tabular-nums ${
+        low ? "text-amber-600 dark:text-amber-400" : "dark:text-zinc-300 text-zinc-700"
+      }`}
+    >
+      {formatCurrency(balance)}
+    </span>
+  </div>
+);
+
+export default Navbar;

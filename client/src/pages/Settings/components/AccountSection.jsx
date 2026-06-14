@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useAuth from '../../../context/auth/useAuth.js'
-import { Section } from './shared.jsx'
+import { Section } from './Shared.jsx'
 
 const AccountSection = () => {
   const { logoutUser } = useAuth()

@@ -1,23 +1,66 @@
-const COLORS = {
-  purple: 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300',
-  green:  'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300',
-  red:    'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300',
-  amber:  'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300',
-  gray:   'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+const colorMap = {
+  purple: {
+    value:   'text-purple-600 dark:text-purple-400',
+    bg:      'bg-purple-500/[0.07] dark:bg-purple-500/[0.08]',
+    border:  'border-purple-500/20',
+    dot:     'bg-purple-500',
+  },
+  green: {
+    value:   'text-emerald-600 dark:text-emerald-400',
+    bg:      'bg-emerald-500/[0.07] dark:bg-emerald-500/[0.08]',
+    border:  'border-emerald-500/20',
+    dot:     'bg-emerald-500',
+  },
+  red: {
+    value:   'text-red-600 dark:text-red-400',
+    bg:      'bg-red-500/[0.07] dark:bg-red-500/[0.08]',
+    border:  'border-red-500/20',
+    dot:     'bg-red-500',
+  },
+  amber: {
+    value:   'text-amber-600 dark:text-amber-400',
+    bg:      'bg-amber-500/[0.07] dark:bg-amber-500/[0.08]',
+    border:  'border-amber-500/20',
+    dot:     'bg-amber-500',
+  },
+  blue: {
+    value:   'text-blue-600 dark:text-blue-400',
+    bg:      'bg-blue-500/[0.07] dark:bg-blue-500/[0.08]',
+    border:  'border-blue-500/20',
+    dot:     'bg-blue-500',
+  },
 }
 
-const StatCard = ({ label, value, sub, color = 'gray' }) => (
-  <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-5 shadow-lg">
-    <p className="text-xs text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-wide">
-      {label}
-    </p>
-    <p className={`text-2xl font-medium ${COLORS[color].split(' ')[1]}`}>
-      {value}
-    </p>
-    {sub && (
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{sub}</p>
-    )}
-  </div>
-)
+const StatCard = ({ label, value, sub, color = 'purple', className = '' }) => {
+  const c = colorMap[color] || colorMap.purple
+
+  return (
+    <div className={`
+      relative rounded-2xl p-4 border
+      ${c.bg} ${c.border}
+      dark:bg-[#0f0f1c]/60
+      hover:scale-[1.01] transition-transform duration-200
+      animate-fadeUp ${className}
+    `}>
+      {/* Dot indicator */}
+      <span className={`absolute top-4 right-4 w-1.5 h-1.5 rounded-full ${c.dot}`} />
+
+      <p className="text-[11px] font-medium uppercase tracking-wider
+        text-zinc-500 dark:text-zinc-500 mb-2">
+        {label}
+      </p>
+
+      <p className={`text-xl font-bold tabular-nums tracking-tight mb-1 ${c.value}`}>
+        {value}
+      </p>
+
+      {sub && (
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-600 truncate">
+          {sub}
+        </p>
+      )}
+    </div>
+  )
+}
 
 export default StatCard
