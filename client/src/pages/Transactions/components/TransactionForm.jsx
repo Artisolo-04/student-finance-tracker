@@ -4,9 +4,10 @@ import useUI from '../../../context/ui/useUI.js'
 import CategoryForm from './CategoryForm.jsx'
 import CategoryDropdown from '../../../components/common/CategoryDropdown.jsx'
 import { X, ArrowUpRight, ArrowDownRight, Plus } from 'lucide-react'
+import { getBudgetStatus } from '../../../context/finance/financeHelpers.js'
 
 const TransactionForm = ({ onClose }) => {
-  const { incomeCategories, expenseCategories, addTransaction, addCategory, fetchCategories } = useFinance()
+  const { incomeCategories, expenseCategories, addTransaction, addCategory, fetchCategories, fetchBudgets } = useFinance()
   const { notify } = useUI()
 
   const [tab,     setTab]     = useState('transaction')
@@ -29,23 +30,46 @@ const TransactionForm = ({ onClose }) => {
   const handleTypeChange = (type) => setForm({ ...form, type, category_id: '' })
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    const result = await addTransaction({ ...form, amount: parseFloat(form.amount) })
-    setLoading(false)
-    if (result.success) {
-      if (result.alert) notify.warning('Balance is low!', 'Your balance is below 20 DT')
-      else notify.success(
-        `${form.type === 'income' ? 'Income' : 'Expense'} added!`,
-        `${form.amount} DT recorded successfully`
-      )
-      onClose()
-    } else {
-      notify.error('Failed to add transaction', result.error)
-      setError(result.error)
+      e.preventDefault()
+      setError('')
+      setLoading(true)
+      const result = await addTransaction({ ...form, amount: parseFloat(form.amount) })
+      setLoading(false)
+      if (result.success) {
+        if (result.alert) {
+          notify.warning('Balance is low!', 'Your balance is below 20 DT')
+        } else {
+          notify.success(
+            `${form.type === 'income' ? 'Income' : 'Expense'} added!`,
+            `${form.amount} DT recorded successfully`
+          )
+        }
+
+        if (form.type === 'expense' && form.category_id) {
+          const freshBudgets = await fetchBudgets()
+          const budget = freshBudgets.find(b => b.category_id === form.category_id)
+          if (budget) {
+            const { percent, level } = getBudgetStatus(budget.spent, budget.monthly_limit)
+            if (level === 'danger') {
+              notify.error(
+                `${budget.category_name} budget exceeded`,
+                `${budget.spent.toFixed(2)} / ${budget.monthly_limit.toFixed(2)} DT this month`
+              )
+            } else if (level === 'warning') {
+              notify.warning(
+                `${budget.category_name} budget at ${Math.round(percent)}%`,
+                `${budget.spent.toFixed(2)} / ${budget.monthly_limit.toFixed(2)} DT this month`
+              )
+            }
+          }
+        }
+
+        onClose()
+      } else {
+        notify.error('Failed to add transaction', result.error)
+        setError(result.error)
+      }
     }
-  }
 
   const handleAddCategory = async (e) => {
     e.preventDefault()

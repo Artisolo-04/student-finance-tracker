@@ -5,12 +5,23 @@ import ProfileForm from './components/ProfileForm.jsx'
 import AppearanceSection from './components/AppearanceSection.jsx'
 import PasswordForm from './components/PasswordForm.jsx'
 import AccountSection from './components/AccountSection.jsx'
+import BudgetSettings from './components/BudgetSettings.jsx'
+import { useEffect } from 'react'
+import useFinance from '../../context/finance/useFinance.js'
 
-const TABS = ['Profile', 'Security', 'Account']
+
+const TABS = ['Profile', 'Security', 'Account', 'Budgets']
 
 const Settings = () => {
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('Profile')
+
+  const { fetchBudgets, fetchCategories } = useFinance()
+
+    useEffect(() => {
+      fetchCategories()
+      fetchBudgets()
+    }, [])
 
   return (
     <div className="w-full sm:h-full flex flex-col gap-5">
@@ -59,6 +70,10 @@ const Settings = () => {
               <AppearanceSection />
               <AccountSection />
             </>
+          )}
+
+          {activeTab === 'Budgets' && (
+            <BudgetSettings />
           )}
 
         </div>

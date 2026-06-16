@@ -8,6 +8,7 @@ export const initialState = {
   incomeCategories: [],
   expenseCategories: [],
   balance: 0,
+  budgets: [],
   loading: false,
   error: null,
 }
@@ -69,6 +70,29 @@ const financeReducer = (state, action) => {
       return { ...state, loading: action.payload }
     case FINANCE_ACTIONS.SET_ERROR:
       return { ...state, error: action.payload, loading: false }
+
+    case FINANCE_ACTIONS.SET_BUDGETS:
+          return { ...state, budgets: action.payload.budgets }
+
+    case FINANCE_ACTIONS.UPSERT_BUDGET: {
+      const exists = state.budgets.some(b => b.category_id === action.payload.category_id)
+      return {
+        ...state,
+        budgets: exists
+          ? state.budgets.map(b =>
+              b.category_id === action.payload.category_id ? action.payload : b
+            )
+          : [...state.budgets, action.payload],
+      }
+    }
+
+    case FINANCE_ACTIONS.REMOVE_BUDGET:
+      return {
+        ...state,
+        budgets: state.budgets.filter(b => b.category_id !== action.payload.category_id),
+      }
+
+
     default:
       return state
   }

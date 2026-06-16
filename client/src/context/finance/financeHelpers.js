@@ -33,3 +33,11 @@ export const groupByMonth = (transactions) => {
     return acc
   }, {})
 }
+
+
+export const getBudgetStatus = (spent, limit) => {
+  const percent = limit > 0 ? (spent / limit) * 100 : 0
+  if (percent >= 100) return { percent: Math.min(percent, 999), level: 'danger' }
+  if (percent >= 80) return { percent, level: 'warning' }
+  return { percent, level: 'ok' }
+}

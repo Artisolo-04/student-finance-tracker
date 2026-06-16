@@ -18,7 +18,7 @@ const CategoryOverview = ({ categoryData, totalExpenses }) => {
   const [hovered, setHovered] = useState(null)
 
   return (
-    <div className="h-full bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col animate-fadeUp justify-between ">
+    <div className="h-full w-full bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col animate-fadeUp justify-between ">
       <div className="mb-4">
         <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Expenses by category</h2>
         <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-0.5">Where your money goes</p>

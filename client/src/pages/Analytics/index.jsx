@@ -5,14 +5,15 @@ import AnalyticsStats from './components/AnalyticsStats.jsx'
 import MonthlyChart from './components/MonthlyChart.jsx'
 import CategoryOverview from './components/CategoryOverview.jsx'
 import Insights from './components/Insights.jsx'
+import BudgetProgress from './components/BudgetProgress.jsx'
 
 const TABS = ['Overview', 'Monthly', 'Insights']
 
 const Analytics = () => {
-  const { transactions, savingsTotal, fetchTransactions, fetchSavings } = useFinance()
+  const { transactions, savingsTotal, fetchTransactions, fetchSavings, fetchBudgets } = useFinance()
   const [activeTab, setActiveTab] = useState('Overview')
 
-  useEffect(() => { fetchTransactions(); fetchSavings() }, [])
+  useEffect(() => { fetchTransactions(); fetchSavings(); fetchBudgets() }, [])
 
   const totalIncome = useMemo(() =>
     transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + parseFloat(t.amount), 0)
@@ -86,11 +87,12 @@ const Analytics = () => {
                 savingsRate={savingsRate}
               />
             </div>
-            <div className="sm:flex-1 sm:min-h-0">
+            <div className="sm:flex-1 sm:min-h-0 flex flex-row w-full gap-4 sm:overflow-y-auto">
               <CategoryOverview
                 categoryData={categoryData}
                 totalExpenses={totalExpenses}
               />
+              <BudgetProgress />
             </div>
           </div>
         )}

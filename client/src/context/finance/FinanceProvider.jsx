@@ -105,15 +105,49 @@ const FinanceProvider = ({ children }) => {
     }
   }
 
+  const fetchBudgets = useCallback(async () => {
+      try {
+        const res = await api.get('/budgets')
+        dispatch({ type: FINANCE_ACTIONS.SET_BUDGETS, payload: { budgets: res.data.budgets } })
+        return res.data.budgets
+      } catch (err) {
+        dispatch({ type: FINANCE_ACTIONS.SET_ERROR, payload: err.message })
+        return []
+      }
+    }, [])
+
+    const saveBudget = async (category_id, monthly_limit) => {
+      try {
+        const res = await api.post('/budgets', { category_id, monthly_limit })
+        dispatch({ type: FINANCE_ACTIONS.UPSERT_BUDGET, payload: res.data.budget })
+        return { success: true }
+      } catch (err) {
+        return { success: false, error: err.response?.data?.error || 'Failed to save budget' }
+      }
+    }
+
+    const deleteBudget = async (categoryId) => {
+      try {
+        const res = await api.delete(`/budgets/${categoryId}`)
+        dispatch({ type: FINANCE_ACTIONS.REMOVE_BUDGET, payload: { category_id: res.data.category_id } })
+        return { success: true }
+      } catch (err) {
+        return { success: false, error: err.response?.data?.error || 'Failed to delete budget' }
+      }
+    }
+
   return (
     <FinanceContext.Provider value={{
       ...state,
       fetchTransactions,
       fetchSavings,
       fetchCategories,
+      fetchBudgets,
       addTransaction,
       deleteTransaction,
       addCategory,
+      saveBudget,
+      deleteBudget,
     }}>
       {children}
     </FinanceContext.Provider>
