@@ -29,16 +29,16 @@ const CategoryOverview = ({ categoryData, totalExpenses }) => {
           <p className="text-xs text-zinc-500">No expenses yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-center justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 flex items-end justify-between h-full overflow-hidden">
 
-          <div className="flex flex-col items-center">
-            <ResponsiveContainer width="100%" height={200}>
+          <div className="flex flex-col items-center justify-between h-full">
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={categoryData}
                   cx="50%" cy="50%"
-                  innerRadius={55} outerRadius={85}
-                  paddingAngle={3} dataKey="value"
+                  innerRadius={70} outerRadius={100}
+                  paddingAngle={2} dataKey="value"
                   strokeWidth={0}
                   onMouseEnter={(_, i) => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
@@ -60,7 +60,7 @@ const CategoryOverview = ({ categoryData, totalExpenses }) => {
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4 overflow-y-auto max-h-40 pr-2 ">
             {categoryData.map((cat, i) => {
               const pct = totalExpenses > 0 ? Math.round((cat.value / totalExpenses) * 100) : 0
               return (
