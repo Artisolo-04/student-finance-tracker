@@ -87,7 +87,7 @@ const Analytics = () => {
                 savingsRate={savingsRate}
               />
             </div>
-            <div className="sm:flex-1 sm:min-h-0 flex flex-row w-full gap-4 sm:overflow-y-auto">
+            <div className="sm:flex-1 sm:min-h-0 flex flex-col w-full gap-4 sm:overflow-y-auto sm:flex-row">
               <CategoryOverview
                 categoryData={categoryData}
                 totalExpenses={totalExpenses}

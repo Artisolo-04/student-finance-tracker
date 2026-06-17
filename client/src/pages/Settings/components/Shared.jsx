@@ -1,5 +1,5 @@
 export const Section = ({ title, description, children }) => (
-  <div className="bg-white dark:bg-[#0f0f1c] border border-gray-200 dark:border-white/[0.07] rounded-2xl overflow-hidden">
+  <div className="bg-white dark:bg-[#0f0f1c] border border-gray-200 dark:border-white/[0.07] rounded-2xl">
     <div className="px-5 py-4 border-b border-gray-100 dark:border-white/[0.05]">
       <h2 className="text-sm font-semibold text-gray-900 dark:text-zinc-200">{title}</h2>
       {description && (

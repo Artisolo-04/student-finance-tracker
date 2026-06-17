@@ -1,11 +1,6 @@
 import useFinance from '../../../context/finance/useFinance.js'
 import { getBudgetStatus } from '../../../context/finance/financeHelpers.js'
-
-const barColor = {
-  ok: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  danger: 'bg-red-500',
-}
+import { formatCurrency } from '../../../context/finance/financeHelpers.js'
 
 const BudgetProgress = () => {
   const { budgets } = useFinance()
@@ -13,28 +8,49 @@ const BudgetProgress = () => {
   if (!budgets.length) return null
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 space-y-4 w-full">
-      <h3 className="text-base font-semibold text-gray-900 dark:text-white">Budget Goals</h3>
+    <div className="w-full bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col animate-fadeUp">
+      <div className="mb-4">
+        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Budget Goals</h2>
+        <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-0.5">Monthly spending limits by category</p>
+      </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {budgets.map(b => {
           const { percent, level } = getBudgetStatus(b.spent, b.monthly_limit)
           const width = Math.min(percent, 100)
+          const barColor = level === 'danger'
+            ? '#E24B4A'
+            : level === 'warning'
+            ? '#EF9F27'
+            : '#1D9E75'
 
           return (
             <div key={b.category_id}>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-700 dark:text-gray-300">{b.category_name}</span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  {b.spent.toFixed(2)} / {b.monthly_limit.toFixed(2)} DT
-                </span>
+              <div className="flex justify-between items-center mb-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: barColor }} />
+                  <span className="text-xs text-zinc-600 dark:text-zinc-400">{b.category_name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-zinc-400 dark:text-zinc-600">
+                    {Math.round(Math.min(percent, 100))}%
+                  </span>
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                    {formatCurrency(b.spent)} / {formatCurrency(b.monthly_limit)}
+                  </span>
+                </div>
               </div>
-              <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2">
+              <div className="w-full bg-zinc-100 dark:bg-zinc-800/60 rounded-full h-1.5">
                 <div
-                  className={`h-2 rounded-full transition-all ${barColor[level]}`}
-                  style={{ width: `${width}%` }}
+                  className="h-1.5 rounded-full transition-all duration-500"
+                  style={{ width: `${width}%`, background: barColor }}
                 />
               </div>
+              {level === 'danger' && (
+                <p className="text-[10px] text-red-400 mt-1">
+                  Over by {formatCurrency(b.spent - b.monthly_limit)}
+                </p>
+              )}
             </div>
           )
         })}

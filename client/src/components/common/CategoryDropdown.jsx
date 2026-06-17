@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-const CategoryDropdown = ({ categories, value, onChange, type, onCreateNew }) => {
+const CategoryDropdown = ({ categories, value, onChange, type, onCreateNew, hideCreateNew = false }) => {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [dropUp, setDropUp] = useState(false)
@@ -203,22 +203,25 @@ const CategoryDropdown = ({ categories, value, onChange, type, onCreateNew }) =>
 
           </div>
 
-          <div className="px-2 py-2 border-t border-gray-100 dark:border-gray-700">
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false)
-                setSearch('')
-                onCreateNew?.()
-              }}
-              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors font-medium"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-              </svg>
-              Create new {type === 'income' ? 'source' : 'category'}
-            </button>
-          </div>
+          {!hideCreateNew && (
+            <div className="px-2 py-2 border-t border-gray-100 dark:border-gray-700">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false)
+                  setSearch('')
+                  onCreateNew?.()
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors font-medium"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                </svg>
+                Create new {type === 'income' ? 'source' : 'category'}
+              </button>
+            </div>
+          )}
+          
         </div>
       )}
     </div>
