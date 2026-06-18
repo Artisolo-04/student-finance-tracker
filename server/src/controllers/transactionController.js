@@ -20,13 +20,14 @@ const calculateBalance = async (userId) => {
      FROM transactions
      WHERE user_id = $1
        AND type = 'expense'
-       AND created_at > $2`,
-    [userId, lastIncome.created_at]
+       AND (
+         date > $2
+         OR (date = $2 AND created_at > $3)
+       )`,
+    [userId, lastIncome.date, lastIncome.created_at]
   )
 
-  const expenses = parseFloat(expensesResult.rows[0].total_expenses)
-
-  return parseFloat(lastIncome.amount) - expenses
+  return parseFloat(lastIncome.amount) - parseFloat(expensesResult.rows[0].total_expenses)
 }
 
 export const getTransactions = async (req, res) => {
