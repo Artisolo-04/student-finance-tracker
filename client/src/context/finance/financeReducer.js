@@ -9,6 +9,14 @@ export const initialState = {
   expenseCategories: [],
   balance: 0,
   budgets: [],
+  budgetSummary: {
+    income: 0,
+    allocated: 0,
+    unallocated: 0,
+    cycle_start: null,
+    income_transaction_id: null,
+  },
+  needsAllocation: false,
   loading: false,
   error: null,
 }
@@ -72,17 +80,22 @@ const financeReducer = (state, action) => {
       return { ...state, error: action.payload, loading: false }
 
     case FINANCE_ACTIONS.SET_BUDGETS:
-          return { ...state, budgets: action.payload.budgets }
+      return {
+        ...state,
+        budgets: action.payload.budgets,
+        budgetSummary: action.payload.summary,
+      }
 
     case FINANCE_ACTIONS.UPSERT_BUDGET: {
-      const exists = state.budgets.some(b => b.category_id === action.payload.category_id)
+      const exists = state.budgets.some(b => b.category_id === action.payload.budget.category_id)
       return {
         ...state,
         budgets: exists
           ? state.budgets.map(b =>
-              b.category_id === action.payload.category_id ? action.payload : b
+              b.category_id === action.payload.budget.category_id ? action.payload.budget : b
             )
-          : [...state.budgets, action.payload],
+          : [...state.budgets, action.payload.budget],
+        budgetSummary: action.payload.summary,
       }
     }
 
@@ -90,7 +103,14 @@ const financeReducer = (state, action) => {
       return {
         ...state,
         budgets: state.budgets.filter(b => b.category_id !== action.payload.category_id),
+        budgetSummary: action.payload.summary,
       }
+
+    case FINANCE_ACTIONS.SET_BUDGET_SUMMARY:
+      return { ...state, budgetSummary: action.payload }
+
+    case FINANCE_ACTIONS.SET_NEEDS_ALLOCATION:
+      return { ...state, needsAllocation: action.payload }
 
 
     default:

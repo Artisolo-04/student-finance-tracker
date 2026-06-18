@@ -4,7 +4,7 @@ import useUI from '../../../context/ui/useUI.js'
 import CategoryForm from './CategoryForm.jsx'
 import CategoryDropdown from '../../../components/common/CategoryDropdown.jsx'
 import { X, ArrowUpRight, ArrowDownRight, Plus } from 'lucide-react'
-import { getBudgetStatus } from '../../../context/finance/financeHelpers.js'
+import { getBudgetStatus, formatCurrency } from '../../../context/finance/financeHelpers.js'
 
 const TransactionForm = ({ onClose }) => {
   const { incomeCategories, expenseCategories, addTransaction, addCategory, fetchCategories, fetchBudgets } = useFinance()
@@ -49,16 +49,16 @@ const TransactionForm = ({ onClose }) => {
           const freshBudgets = await fetchBudgets()
           const budget = freshBudgets.find(b => b.category_id === form.category_id)
           if (budget) {
-            const { percent, level } = getBudgetStatus(budget.spent, budget.monthly_limit)
+            const { percent, level } = getBudgetStatus(budget.spent, budget.allocated)
             if (level === 'danger') {
               notify.error(
-                `${budget.category_name} budget exceeded`,
-                `${budget.spent.toFixed(2)} / ${budget.monthly_limit.toFixed(2)} DT this month`
+                `${budget.category_name} envelope exceeded`,
+                `${formatCurrency(budget.spent)} / ${formatCurrency(budget.allocated)} this cycle`
               )
             } else if (level === 'warning') {
               notify.warning(
-                `${budget.category_name} budget at ${Math.round(percent)}%`,
-                `${budget.spent.toFixed(2)} / ${budget.monthly_limit.toFixed(2)} DT this month`
+                `${budget.category_name} at ${Math.round(percent)}%`,
+                `${formatCurrency(budget.spent)} / ${formatCurrency(budget.allocated)} this cycle`
               )
             }
           }

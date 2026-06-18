@@ -1,5 +1,6 @@
 import pool from '../db/pool.js'
 import { seedDefaultCategories } from './categoryController.js'
+import { closePreviousCycle } from './budgetController.js'
 
 const calculateBalance = async (userId) => {
   const lastIncomeResult = await pool.query(
@@ -85,6 +86,10 @@ export const createTransaction = async (req, res) => {
         )
         console.log(`💰 Auto-saved ${currentBalance} DT for user ${req.userId}`)
       }
+
+      // Close previous budget cycle before new income starts a new one
+      await closePreviousCycle(req.userId, client)
+      console.log(`📅 Closed previous budget cycle for user ${req.userId}`)
     }
 
     const result = await client.query(
@@ -111,7 +116,8 @@ export const createTransaction = async (req, res) => {
     res.status(201).json({
       transaction,
       balance: parseFloat(newBalance.toFixed(2)),
-      alert: newBalance >= 0 && newBalance <= 20
+      alert: newBalance >= 0 && newBalance <= 20,
+      needsAllocation: type === 'income',
     })
 
   } catch (err) {

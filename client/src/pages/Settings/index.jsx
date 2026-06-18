@@ -52,7 +52,7 @@ const Settings = () => {
       </div>
 
       <div className="sm:flex-1 sm:min-h-0 sm:overflow-y-auto animate-fadeUp stagger-2 bg-white dark:bg-[#0f0f1c] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl p-5 flex flex-col w-full items-center justify-center max-sm:border-none max-sm:p-0">
-        <div className="max-w-2xl mx-auto flex flex-col gap-6 pb-6 w-4/5 max-sm:w-full">
+        <div className="max-w-2xl mx-auto flex flex-col gap-6 w-4/5 max-sm:w-full">
 
           {activeTab === 'Profile' && (
             <>

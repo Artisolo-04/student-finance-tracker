@@ -4,18 +4,21 @@ import { formatCurrency, isBalanceLow } from '../../context/finance/financeHelpe
 import StatCard from './components/StatCard'
 import RecentTransactions from './components/RecentTransactions'
 import SavingsOverview from './components/SavingsOverview'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, PiggyBank } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
   const {
     transactions, balance, savingsTotal, loading,
     fetchTransactions, fetchSavings, fetchCategories,
+    fetchBudgets, budgetSummary, needsAllocation, clearNeedsAllocation,
   } = useFinance()
 
   useEffect(() => {
     fetchTransactions()
     fetchSavings()
     fetchCategories()
+    fetchBudgets()
   }, [])
 
   const totalIncome = transactions
@@ -28,6 +31,7 @@ const Dashboard = () => {
 
   const recent = transactions.slice(0, 10)
   const low = isBalanceLow(balance)
+  const hasUnallocated = budgetSummary.unallocated > 0 && budgetSummary.income_transaction_id !== null
   const savingsRate = totalIncome > 0
     ? ((savingsTotal / totalIncome) * 100).toFixed(1)
     : 0
@@ -45,6 +49,30 @@ const Dashboard = () => {
           <p className="text-xs font-medium text-amber-600 dark:text-amber-400">
             Your balance is low — consider adding income or reducing expenses.
           </p>
+        </div>
+      )}
+
+      {hasUnallocated && (
+        <div className="flex items-center justify-between gap-2.5 rounded-xl
+          border border-purple-500/20 bg-purple-500/[0.07]
+          px-4 py-3 animate-fadeIn shrink-0">
+          <div className="flex items-center gap-2.5">
+            <PiggyBank size={15} className="text-purple-400 shrink-0" strokeWidth={2} />
+            <p className="text-xs font-medium text-purple-600 dark:text-purple-400">
+              You have <span className="font-bold">{formatCurrency(budgetSummary.unallocated)}</span> unallocated — plan where your money goes.
+            </p>
+          </div>
+          <Link
+            to="/settings"
+            onClick={() => {
+              clearNeedsAllocation()
+            }}
+            className="shrink-0 text-xs font-semibold text-purple-500 hover:text-purple-400
+              border border-purple-500/30 hover:border-purple-400/50
+              px-3 py-1.5 rounded-lg transition-all"
+          >
+            Plan budget →
+          </Link>
         </div>
       )}
 

@@ -76,7 +76,12 @@ const FinanceProvider = ({ children }) => {
           newSaving,
         },
       })
-      return { success: true, alert: res.data.alert }
+
+      if (res.data.needsAllocation) {
+        dispatch({ type: FINANCE_ACTIONS.SET_NEEDS_ALLOCATION, payload: true })
+      }
+      return { success: true, alert: res.data.alert, needsAllocation: res.data.needsAllocation }
+
     } catch (err) {
       return { success: false, error: err.response?.data?.error || 'Failed to add transaction' }
     }
@@ -106,35 +111,44 @@ const FinanceProvider = ({ children }) => {
   }
 
   const fetchBudgets = useCallback(async () => {
-      try {
-        const res = await api.get('/budgets')
-        dispatch({ type: FINANCE_ACTIONS.SET_BUDGETS, payload: { budgets: res.data.budgets } })
-        return res.data.budgets
-      } catch (err) {
-        dispatch({ type: FINANCE_ACTIONS.SET_ERROR, payload: err.message })
-        return []
-      }
-    }, [])
-
-    const saveBudget = async (category_id, monthly_limit) => {
-      try {
-        const res = await api.post('/budgets', { category_id, monthly_limit })
-        dispatch({ type: FINANCE_ACTIONS.UPSERT_BUDGET, payload: res.data.budget })
-        return { success: true }
-      } catch (err) {
-        return { success: false, error: err.response?.data?.error || 'Failed to save budget' }
-      }
+    try {
+      const res = await api.get('/budgets')
+      dispatch({
+        type: FINANCE_ACTIONS.SET_BUDGETS,
+        payload: { budgets: res.data.budgets, summary: res.data.summary },
+      })
+      return res.data.budgets
+    } catch (err) {
+      dispatch({ type: FINANCE_ACTIONS.SET_ERROR, payload: err.message })
+      return []
     }
+  }, [])
 
-    const deleteBudget = async (categoryId) => {
-      try {
-        const res = await api.delete(`/budgets/${categoryId}`)
-        dispatch({ type: FINANCE_ACTIONS.REMOVE_BUDGET, payload: { category_id: res.data.category_id } })
-        return { success: true }
-      } catch (err) {
-        return { success: false, error: err.response?.data?.error || 'Failed to delete budget' }
-      }
+  const saveBudget = async (category_id, allocated) => {
+    try {
+      const res = await api.post('/budgets', { category_id, allocated })
+      dispatch({
+        type: FINANCE_ACTIONS.UPSERT_BUDGET,
+        payload: { budget: res.data.budget, summary: res.data.summary },
+      })
+      return { success: true }
+    } catch (err) {
+      return { success: false, error: err.response?.data?.error || 'Failed to save budget' }
     }
+  }
+
+  const deleteBudget = async (categoryId) => {
+    try {
+      const res = await api.delete(`/budgets/${categoryId}`)
+      dispatch({
+        type: FINANCE_ACTIONS.REMOVE_BUDGET,
+        payload: { category_id: res.data.category_id, summary: res.data.summary },
+      })
+      return { success: true }
+    } catch (err) {
+      return { success: false, error: err.response?.data?.error || 'Failed to delete budget' }
+    }
+  }
 
   return (
     <FinanceContext.Provider value={{
@@ -148,6 +162,7 @@ const FinanceProvider = ({ children }) => {
       addCategory,
       saveBudget,
       deleteBudget,
+      clearNeedsAllocation: () => dispatch({ type: FINANCE_ACTIONS.SET_NEEDS_ALLOCATION, payload: false }),
     }}>
       {children}
     </FinanceContext.Provider>
