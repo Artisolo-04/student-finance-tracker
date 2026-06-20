@@ -5,13 +5,14 @@ import StatCard from './components/StatCard'
 import RecentTransactions from './components/RecentTransactions'
 import SavingsOverview from './components/SavingsOverview'
 import { AlertTriangle, PiggyBank } from 'lucide-react'
+import BudgetAlerts from './components/BudgetAlerts.jsx'
 import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
   const {
     transactions, balance, savingsTotal, loading,
     fetchTransactions, fetchSavings, fetchCategories,
-    fetchBudgets, budgetSummary, needsAllocation, clearNeedsAllocation,
+    fetchBudgets, budgetSummary, budgets, needsAllocation, clearNeedsAllocation,
   } = useFinance()
 
   useEffect(() => {
@@ -63,10 +64,8 @@ const Dashboard = () => {
             </p>
           </div>
           <Link
-            to="/settings"
-            onClick={() => {
-              clearNeedsAllocation()
-            }}
+            to="/settings?tab=Budgets"
+            onClick={clearNeedsAllocation}
             className="shrink-0 text-xs font-semibold text-purple-500 hover:text-purple-400
               border border-purple-500/30 hover:border-purple-400/50
               px-3 py-1.5 rounded-lg transition-all"
@@ -111,12 +110,15 @@ const Dashboard = () => {
         <div className="xl:col-span-2 min-h-0">
           <RecentTransactions transactions={recent} />
         </div>
-        <div className="min-h-0">
-          <SavingsOverview
-            savingsTotal={savingsTotal}
-            totalIncome={totalIncome}
-            totalExpenses={totalExpenses}
-          />
+        <div className="min-h-0 flex flex-col gap-4">
+          <BudgetAlerts budgets={budgets} />
+          <div className="flex-1 min-h-0">
+            <SavingsOverview
+              savingsTotal={savingsTotal}
+              totalIncome={totalIncome}
+              totalExpenses={totalExpenses}
+            />
+          </div>
         </div>
       </div>
 

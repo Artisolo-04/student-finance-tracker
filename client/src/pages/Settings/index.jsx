@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import useAuth from '../../context/auth/useAuth.js'
 import ProfileCard from './components/ProfileCard.jsx'
 import ProfileForm from './components/ProfileForm.jsx'
@@ -6,7 +7,6 @@ import AppearanceSection from './components/AppearanceSection.jsx'
 import PasswordForm from './components/PasswordForm.jsx'
 import AccountSection from './components/AccountSection.jsx'
 import BudgetSettings from './components/BudgetSettings.jsx'
-import { useEffect } from 'react'
 import useFinance from '../../context/finance/useFinance.js'
 
 
@@ -14,7 +14,11 @@ const TABS = ['Profile', 'Security', 'Account', 'Budgets']
 
 const Settings = () => {
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState('Profile')
+  const [searchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState(() => {
+    const tab = searchParams.get('tab')
+    return TABS.includes(tab) ? tab : 'Profile'
+  })
 
   const { fetchBudgets, fetchCategories } = useFinance()
 
