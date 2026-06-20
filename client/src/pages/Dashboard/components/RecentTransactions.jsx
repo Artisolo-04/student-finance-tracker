@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { formatCurrency } from '../../../context/finance/financeHelpers.js'
+import { formatCurrency, parseLocalDate } from '../../../context/finance/financeHelpers.js'
 import { ArrowUpRight, ArrowDownRight, ArrowRight, Receipt } from 'lucide-react'
 
 const TransactionRow = ({ t, index }) => (
@@ -43,7 +43,7 @@ const TransactionRow = ({ t, index }) => (
             </span>
           )}
           <span className="text-[11px] text-zinc-400 dark:text-zinc-600">
-            {new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+            {parseLocalDate(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
           </span>
         </div>
       </div>

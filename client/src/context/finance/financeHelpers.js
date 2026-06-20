@@ -1,3 +1,15 @@
+/**
+ * Safely parses a date string (e.g. "2026-06-10" or "2026-06-10T00:00:00.000Z")
+ * as a LOCAL calendar date, ignoring timezone entirely.
+ * Prevents off-by-one-day bugs when the browser timezone is behind UTC.
+ */
+export const parseLocalDate = (dateStr) => {
+  if (!dateStr) return null
+  const datePart = dateStr.split('T')[0] // "2026-06-10"
+  const [year, month, day] = datePart.split('-').map(Number)
+  return new Date(year, month - 1, day) // local midnight, no UTC shift
+}
+
 export const calculateBalance = (transactions) => {
   return transactions.reduce((acc, t) => {
     return t.type === 'income'
@@ -23,7 +35,7 @@ export const groupByCategory = (transactions) => {
 
 export const groupByMonth = (transactions) => {
   return transactions.reduce((acc, t) => {
-    const month = new Date(t.date).toLocaleString('default', {
+    const month = parseLocalDate(t.date).toLocaleString('default', {
       month: 'short',
       year: 'numeric',
     })

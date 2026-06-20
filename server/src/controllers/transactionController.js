@@ -166,3 +166,79 @@ export const getBalance = async (req, res) => {
     res.status(500).json({ error: 'Server error' })
   }
 }
+
+
+
+
+/**
+ * GET /api/transactions/calendar?month=6&year=2026
+ * Returns all transactions for the given month, grouped by day.
+ * Each day includes income total, expense total, net, and the transaction list.
+ */
+export const getCalendarData = async (req, res) => {
+  const { month, year } = req.query
+
+  const numMonth = parseInt(month)
+  const numYear = parseInt(year)
+
+  if (!numMonth || !numYear || numMonth < 1 || numMonth > 12) {
+    return res.status(400).json({ error: 'Valid month (1-12) and year are required' })
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT t.id, t.type, t.amount, t.note,
+              TO_CHAR(t.date, 'YYYY-MM-DD') AS date_key,
+              t.date,
+              c.name AS category_name, c.color AS category_color, c.icon AS category_icon
+       FROM transactions t
+       LEFT JOIN categories c ON t.category_id = c.id
+       WHERE t.user_id = $1
+         AND EXTRACT(MONTH FROM t.date) = $2
+         AND EXTRACT(YEAR FROM t.date) = $3
+       ORDER BY t.date ASC, t.created_at ASC`,
+      [req.userId, numMonth, numYear]
+    )
+
+    const days = {}
+
+    for (const t of result.rows) {
+      const dateKey = t.date_key
+
+      if (!days[dateKey]) {
+        days[dateKey] = {
+          income: 0,
+          expense: 0,
+          net: 0,
+          transactions: [],
+        }
+      }
+
+      const amount = parseFloat(t.amount)
+
+      if (t.type === 'income') {
+        days[dateKey].income += amount
+      } else {
+        days[dateKey].expense += amount
+      }
+
+      days[dateKey].net = parseFloat((days[dateKey].income - days[dateKey].expense).toFixed(2))
+
+      // Send date_key as the authoritative date string, drop the raw timestamp
+      // to avoid timezone confusion on the frontend
+      const { date_key, date, ...rest } = t
+      days[dateKey].transactions.push({ ...rest, date: date_key })
+    }
+
+    // Round totals cleanly
+    for (const key in days) {
+      days[key].income = parseFloat(days[key].income.toFixed(2))
+      days[key].expense = parseFloat(days[key].expense.toFixed(2))
+    }
+
+    res.json({ days, month: numMonth, year: numYear })
+  } catch (err) {
+    console.error('getCalendarData error:', err.message)
+    res.status(500).json({ error: 'Server error' })
+  }
+}

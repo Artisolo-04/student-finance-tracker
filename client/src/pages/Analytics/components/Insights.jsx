@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { formatCurrency } from '../../../context/finance/financeHelpers.js'
+import { formatCurrency, parseLocalDate } from '../../../context/finance/financeHelpers.js'
 import {
   AlertTriangle, Award, TrendingUp, TrendingDown,
   Zap, Target, Calendar, ArrowUpRight
@@ -148,7 +148,7 @@ const Insights = ({
       list.push({
         icon: ArrowUpRight,
         title: 'Largest single expense',
-        description: `"${biggestExpense.note || biggestExpense.category_name || 'Unnamed'}" on ${new Date(biggestExpense.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`,
+        description: `"${biggestExpense.note || biggestExpense.category_name || 'Unnamed'}" on ${parseLocalDate(biggestExpense.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`,
         value: formatCurrency(biggestExpense.amount),
         color: 'text-red-400',
         bg: 'bg-red-500/[0.07]',

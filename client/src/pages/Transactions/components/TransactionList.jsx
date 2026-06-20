@@ -1,4 +1,4 @@
-import { formatCurrency } from '../../../context/finance/financeHelpers.js'
+import { formatCurrency, parseLocalDate  } from '../../../context/finance/financeHelpers.js'
 import { ArrowUpRight, ArrowDownRight, X, Receipt } from 'lucide-react'
 
 const TransactionRow = ({ t, onDelete, deleting }) => (
@@ -30,7 +30,7 @@ const TransactionRow = ({ t, onDelete, deleting }) => (
             </span>
           )}
           <span className="text-[11px] text-zinc-600">
-            {new Date(t.date).toLocaleDateString('en-GB', {
+            {parseLocalDate(t.date).toLocaleDateString('en-GB', {
               day: 'numeric', month: 'short', year: 'numeric',
             })}
           </span>
