@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { formatCurrency } from '../../../context/finance/financeHelpers.js'
-import { PiggyBank } from 'lucide-react'
+import { PiggyBank, ArrowRight } from 'lucide-react'
 
 const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
   const rate = totalIncome > 0 ? Math.round((savingsTotal / totalIncome) * 100) : 0
@@ -30,13 +31,24 @@ const SavingsOverview = ({ savingsTotal, totalIncome, totalExpenses }) => {
       border border-black/[0.07] dark:border-white/[0.07]
       animate-fadeUp
     ">
-      <div className="mb-3 shrink-0">
-        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-          Savings overview
-        </h2>
-        <p className="text-[11px] text-zinc-400 dark:text-zinc-600 mt-0.5">
-          Rate based on total income
-        </p>
+      <div className="flex items-center justify-between mb-3 shrink-0">
+        <div>
+          <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+            Savings overview
+          </h2>
+          <p className="text-[11px] text-zinc-400 dark:text-zinc-600 mt-0.5">
+            Rate based on total income
+          </p>
+        </div>
+        <Link
+          to="/savings"
+          className="flex items-center gap-1 text-xs font-medium
+            text-purple-600 dark:text-purple-400
+            hover:text-purple-700 dark:hover:text-purple-300
+            transition-colors shrink-0"
+        >
+          View all <ArrowRight size={11} />
+        </Link>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-2 py-2">
