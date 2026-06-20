@@ -110,6 +110,16 @@ const FinanceProvider = ({ children }) => {
     }
   }
 
+  const fetchCalendarData = useCallback(async (month, year) => {
+    try {
+      const res = await api.get(`/transactions/calendar?month=${month}&year=${year}`)
+      return res.data.days
+    } catch (err) {
+      dispatch({ type: FINANCE_ACTIONS.SET_ERROR, payload: err.message })
+      return {}
+    }
+  }, [])
+
   const fetchBudgets = useCallback(async () => {
     try {
       const res = await api.get('/budgets')
@@ -157,6 +167,7 @@ const FinanceProvider = ({ children }) => {
       fetchSavings,
       fetchCategories,
       fetchBudgets,
+      fetchCalendarData,
       addTransaction,
       deleteTransaction,
       addCategory,

@@ -44,11 +44,16 @@ body {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 
 .animate-fadeUp      { animation: fadeUp   0.35s ease both; }
 .animate-fadeIn      { animation: fadeIn   0.25s ease both; }
 .animate-scaleIn     { animation: scaleIn  0.25s ease both; }
 .animate-slideUp     { animation: slideUp  0.3s ease both; }
+.animate-slideInRight { animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-piggyBounce { animation: piggyBounce 0.7s ease; }
 
 .stagger-1 { animation-delay: 0.05s; }

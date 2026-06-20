@@ -4,6 +4,7 @@ import useUI from './context/ui/useUI.js'
 import AppShell from './components/layout/AppShell.jsx'
 import Dashboard from './pages/Dashboard/index.jsx'
 import Transactions from './pages/Transactions/index.jsx'
+import CalendarPage from './pages/Calendar/index.jsx'
 import Savings from './pages/Savings/index.jsx'
 import Analytics from './pages/Analytics/index.jsx'
 import Settings from './pages/Settings/index.jsx'
@@ -30,6 +31,7 @@ const App = () => {
         }>
           <Route index element={<Dashboard />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="savings" element={<Savings />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />

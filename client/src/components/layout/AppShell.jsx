@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   PiggyBank,
   Settings,
+  Calendar,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import useUI from "../../context/ui/useUI.js";
@@ -14,7 +15,7 @@ import Sidebar from "./Sidebar.jsx";
 const navItems = [
   { path: "/",             label: "Dashboard",    icon: LayoutDashboard },
   { path: "/transactions", label: "Transactions", icon: ArrowLeftRight  },
-  { path: "/savings",      label: "Savings",      icon: PiggyBank       },
+  { path: "/calendar",     label: "Calendar",     icon: Calendar        },
   { path: "/analytics",    label: "Analytics",    icon: BarChart3       },
   { path: "/settings",     label: "Settings",     icon: Settings        },
 ];

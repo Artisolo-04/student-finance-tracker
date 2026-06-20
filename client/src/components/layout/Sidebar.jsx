@@ -3,12 +3,13 @@ import useAuth from "../../context/auth/useAuth.js";
 import useUI from "../../context/ui/useUI.js";
 import {
   LayoutDashboard, ArrowLeftRight, PiggyBank,
-  BarChart3, Settings, LogOut, TrendingUp,
+  BarChart3, Settings, LogOut, TrendingUp, Calendar,
 } from "lucide-react";
 
 const navItems = [
   { path: "/",             label: "Dashboard",    icon: LayoutDashboard },
   { path: "/transactions", label: "Transactions", icon: ArrowLeftRight  },
+  { path: "/calendar",     label: "Calendar",     icon: Calendar        },
   { path: "/savings",      label: "Savings",      icon: PiggyBank       },
   { path: "/analytics",    label: "Analytics",    icon: BarChart3       },
   { path: "/settings",     label: "Settings",     icon: Settings        },
