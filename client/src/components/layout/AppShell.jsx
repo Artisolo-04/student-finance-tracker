@@ -24,13 +24,7 @@ const AppShell = () => {
   const { toasts, removeToast } = useUI();
 
   return (
-    /*
-     * ROOT — full viewport, no overflow.
-     * On mobile (< sm): flex-col so Navbar sits on top, main scrolls below,
-     *   bottom nav is fixed over everything.
-     * On desktop (≥ sm): flex-row — Sidebar | (Navbar + main in a column).
-     *   Nothing here scrolls; only the inner <main> div scrolls when needed.
-     */
+
     <div className="flex h-[100dvh] dark:bg-[#080810] bg-[#f0f0f5] overflow-hidden">
 
       {/* ── Sidebar — desktop only ───────────────────────────── */}
@@ -51,12 +45,6 @@ const AppShell = () => {
           <Navbar mobile />
         </div>
 
-        {/*
-         * MAIN CONTENT AREA
-         * Desktop: flex-1, overflow-hidden — each page manages its own scroll.
-         * Mobile:  overflow-y-auto — the whole page scrolls naturally,
-         *          with padding-bottom so content clears the fixed bottom nav.
-         */}
         <main
           className="
             flex-1 min-h-0
@@ -65,11 +53,6 @@ const AppShell = () => {
             w-full
           "
         >
-          {/*
-           * Inner wrapper — gives pages a consistent padding canvas.
-           * On desktop it is h-full so pages can stretch to fill.
-           * On mobile it just flows with content (no fixed height).
-           */}
           <div
             className="
               sm:h-full
